@@ -17,9 +17,11 @@
     <label for="confirm_password">Password</label>
     <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm password">
   </div>
-  <div>
-    <label type="text" name="error-message">{{ error_message }}</label>
+  {% if error_message is defined %}
+  <div class="alert alert-danger" role="alert">
+      {{ error_message }}
   </div>
+  {% endif %}
   <button type="submit" class="btn btn-primary">Sign Up</button>
 </form>
 

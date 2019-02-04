@@ -13,9 +13,11 @@
     <input type="checkbox" class="form-check-input" name="remember-me" id="remember-me">
     <label class="form-check-label" for="remember-me">Remember me</label>
   </div>
-  <div>
-    <label type="text" name="error-message">{{ error_message }}</label>
+  {% if error_message is defined %}
+  <div class="alert alert-danger" role="alert">
+      {{ error_message }}
   </div>
+  {% endif %}
   <button type="submit" class="btn btn-primary">Sign In</button>
 </form>
 {% endblock %}

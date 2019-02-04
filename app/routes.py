@@ -32,12 +32,12 @@ def register():
     if request.method == 'POST':
         username_exists = User.query.filter_by(username=request.form.get('username')).first()
         email_exists = User.query.filter_by(email=request.form.get('email')).first()
-        if request.form.get('password') != request.form.get('confirm_password'):
-            return render_template('register.html', error_message=ErrorMessage.PASSWORD_DONT_MATCH.value)
-        elif username_exists:
+        if username_exists:
             return render_template('register.html', error_message=ErrorMessage.USERNAME_ALREADY_EXISTS.value)
         elif email_exists:
             return render_template('register.html', error_message=ErrorMessage.EMAIL_ALREADY_EXISTS.value)
+        elif request.form.get('password') != request.form.get('confirm_password'):
+            return render_template('register.html', error_message=ErrorMessage.PASSWORD_DONT_MATCH.value)
         user = User(username=request.form.get('username'), email=request.form.get('email'))
         user.set_password(request.form.get('password'))
         db.session.add(user)
