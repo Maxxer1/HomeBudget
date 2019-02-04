@@ -18,7 +18,7 @@
       <a class="nav-item nav-link active" href="{{ url_for('index') }}">Home</a>
         {% if current_user.is_anonymous %}
       <a class="nav-item nav-link" href="{{ url_for('login') }}">Sign In</a>
-      <a class="nav-item nav-link" href="#">Register</a>
+      <a class="nav-item nav-link" href="{{ url_for('register') }}">Sign Up</a>
         {% else %}
       <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
         {% endif %}
