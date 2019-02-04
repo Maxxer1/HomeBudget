@@ -1,0 +1,1 @@
+Web service for managing home budget written in python
