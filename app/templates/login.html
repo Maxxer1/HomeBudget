@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="login" method="post">
+<form action="/login" method="post">
   <div class="form-group">
     <label for="email">Email address</label>
-    <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Enter email">
+    <input type="email" class="form-control" name="email" id="email" aria-describedby="email" placeholder="Enter email">
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="Password">
+    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
   </div>
   <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="remember-me">
+    <input type="checkbox" class="form-check-input" name="remember-me" id="remember-me">
     <label class="form-check-label" for="remember-me">Remember me</label>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <div>
+    <label type="text" name="error-message">{{ error_message }}</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Sign In</button>
 </form>
 {% endblock %}
