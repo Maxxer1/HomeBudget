@@ -1,0 +1,26 @@
+.form-signin, .form-register {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .form-check {
+    text-align: center;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+h3 {
+    text-align: center;
+}
+
