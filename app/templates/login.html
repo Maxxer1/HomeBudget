@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<form class="form-signin" action="/login" method="post">
+<form class="form-submit" action="/login" method="post">
   <h3>Please Sign In</h3>
     <div class="form-group">
       <label for="email">Email address</label>
@@ -14,6 +14,7 @@
       <input type="checkbox" class="form-check-input" name="remember-me" id="remember-me">
       <label class="form-check-label" for="remember-me">Remember me</label>
     </div>
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here<a/></p>
     {% if error_message is defined %}
     <div class="alert alert-danger" role="alert">
         {{ error_message }}

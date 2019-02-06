@@ -31,3 +31,23 @@ class UserLogin(db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    description = db.Column(db.String(128))
+    expenses = db.relationship('Expense', backref='category', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Category {}>'.format(self.name)
+
+class Expense(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, index=True)
+    name = db.Column(db.String(128))
+    ammout = db.Column(db.Float(precision=6))
+    description = db.Column(db.String(128), index=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+
+    def __repr__(self):
+        return '<Expense {}>'.format(self.name)

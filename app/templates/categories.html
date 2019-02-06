@@ -1,0 +1,20 @@
+{% extends "base.html"%}
+{% block content %}
+<form class="form-submit" action="/categories" method="post">
+    <h3>Create Category</h3>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Enter Name">
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
+      </div>
+      {% if error_message is defined %}
+      <div class="alert alert-danger" role="alert">
+          {{ error_message }}
+      </div>
+      {% endif %}
+      <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+  </form>
+{% endblock %}
