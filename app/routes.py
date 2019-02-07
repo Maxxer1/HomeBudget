@@ -89,8 +89,8 @@ def incomes():
             income = Income(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category)
-            # db.session.add(income)
-            # db.session.commit()
+            db.session.add(income)
+            db.session.commit()
         return render_template('incomes.html', categories=categories)
 
 
