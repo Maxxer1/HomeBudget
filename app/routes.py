@@ -1,7 +1,7 @@
 from app import app, db
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, UserLogin, Category, Expense
+from app.models import User, UserLogin, Category, Expense, Income
 from datetime import timedelta
 from error_messages import ErrorMessage
 from helpers import get_user_location
@@ -78,14 +78,32 @@ def categories():
     return render_template('categories.html')
 
 
+@app.route('/incomes', methods=['GET', 'POST'])
+@login_required
+def incomes():
+        categories = Category.query.all()
+        if request.method == 'POST':
+            selected_category = request.form.get('category')
+            category = Category.query.filter_by(name=selected_category).first()
+            print(category.name)
+            income = Income(date=request.form.get(
+            'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
+            description=request.form.get('description'), category=category)
+            # db.session.add(income)
+            # db.session.commit()
+        return render_template('incomes.html', categories=categories)
+
+
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
     categories = Category.query.all()
     if request.method == 'POST':
+        selected_category = request.form.get('category')
+        category  = Category.query.filter_by(name=selected_category).first()
         expense = Expense(date=request.form.get(
-            'date'), name=request.form.get('name'), ammout=request.args.get('ammout'),
-            description=request.args.get('description'), category=category)
+            'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
+            description=request.form.get('description'), category=category)
         db.session.add(expense)
         db.session.commit()
     return render_template('expenses.html', categories=categories)
