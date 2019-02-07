@@ -10,6 +10,13 @@
         <label for="description">Description</label>
         <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
       </div>
+      <div class="form-group">
+        <label for="expense-or-income">Expense or income?</label>
+        <select class="custom-select" name="expense-or-income" id="expense-or-income">
+          <option value="1">Expense</option>
+          <option value="0">Income</option>
+        </select>
+      </div>
       {% if error_message is defined %}
       <div class="alert alert-danger" role="alert">
           {{ error_message }}

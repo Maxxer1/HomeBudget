@@ -71,7 +71,10 @@ def categories():
             name=request.form.get('name')).first()
         if category is not None:
             return render_template('categories.html', error_message=ErrorMessage.CATEGORY_ALREADY_EXISTS.value)
-        category = Category(name=request.form.get('name'),
+        print(request.form.get('expense-or-income'))
+        print(bool(request.form.get('expense-or-income')))
+        print(int(True))
+        category = Category(name=request.form.get('name'), is_expense=bool(request.form.get('expense-or-income')),
                             description=request.form.get('description'))
         db.session.add(category)
         db.session.commit()
@@ -81,7 +84,7 @@ def categories():
 @app.route('/incomes', methods=['GET', 'POST'])
 @login_required
 def incomes():
-        categories = Category.query.all()
+        categories = Category.query.filter_by(is_expense=False)
         if request.method == 'POST':
             selected_category = request.form.get('category')
             category = Category.query.filter_by(name=selected_category).first()
@@ -97,7 +100,7 @@ def incomes():
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
-    categories = Category.query.all()
+    categories = Category.query.filter_by(is_expense=True)
     if request.method == 'POST':
         selected_category = request.form.get('category')
         category  = Category.query.filter_by(name=selected_category).first()
