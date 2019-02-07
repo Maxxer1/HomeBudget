@@ -66,19 +66,17 @@ def logout():
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
 def categories():
+    categories = enumerate(Category.query.all(), start=1)
     if request.method == 'POST':
-        category = Category.query.filter_by(
-            name=request.form.get('name')).first()
+        category = Category.query.filter_by(name=request.form.get('name')).first()
         if category is not None:
             return render_template('categories.html', error_message=ErrorMessage.CATEGORY_ALREADY_EXISTS.value)
-        print(request.form.get('expense-or-income'))
-        print(bool(request.form.get('expense-or-income')))
-        print(int(True))
-        category = Category(name=request.form.get('name'), is_expense=bool(request.form.get('expense-or-income')),
+        category = Category(name=request.form.get('name'), is_expense=bool(int(request.form.get('expense-or-income'))),
                             description=request.form.get('description'))
         db.session.add(category)
         db.session.commit()
-    return render_template('categories.html')
+        return redirect(url_for('categories'))
+    return render_template('categories.html', categories=categories)
 
 
 @app.route('/incomes', methods=['GET', 'POST'])
@@ -86,9 +84,7 @@ def categories():
 def incomes():
         categories = Category.query.filter_by(is_expense=False)
         if request.method == 'POST':
-            selected_category = request.form.get('category')
-            category = Category.query.filter_by(name=selected_category).first()
-            print(category.name)
+            category = Category.query.filter_by(name=request.form.get('category')).first()
             income = Income(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category)
@@ -102,8 +98,7 @@ def incomes():
 def expenses():
     categories = Category.query.filter_by(is_expense=True)
     if request.method == 'POST':
-        selected_category = request.form.get('category')
-        category  = Category.query.filter_by(name=selected_category).first()
+        category  = Category.query.filter_by(name=request.form.get('category')).first()
         expense = Expense(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category)

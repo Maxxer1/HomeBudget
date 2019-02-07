@@ -9,6 +9,14 @@
     text-align: center;
 }
 
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 15px;
+  margin: auto; 
+  text-align: center;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #007bff;

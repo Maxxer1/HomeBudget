@@ -1,27 +1,68 @@
-{% extends "base.html"%}
-{% block content %}
+{% extends "base.html"%} {% block content %}
 <form class="form-submit" action="/categories" method="post">
-    <h3>Create Category</h3>
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" name="name" id="name" placeholder="Enter Name">
-      </div>
-      <div class="form-group">
-        <label for="description">Description</label>
-        <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
-      </div>
-      <div class="form-group">
-        <label for="expense-or-income">Expense or income?</label>
-        <select class="custom-select" name="expense-or-income" id="expense-or-income">
-          <option value="1">Expense</option>
-          <option value="0">Income</option>
-        </select>
-      </div>
-      {% if error_message is defined %}
-      <div class="alert alert-danger" role="alert">
-          {{ error_message }}
-      </div>
-      {% endif %}
-      <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
-  </form>
+  <h3>Create Category</h3>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      name="name"
+      id="name"
+      placeholder="Enter Name"
+    />
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      class="form-control"
+      name="description"
+      id="description"
+      placeholder="Enter description"
+    />
+  </div>
+  <div class="form-group">
+    <label for="expense-or-income">Expense or income?</label>
+    <select
+      class="custom-select"
+      name="expense-or-income"
+      id="expense-or-income"
+    >
+      <option value="1">Expense</option>
+      <option value="0">Income</option>
+    </select>
+  </div>
+  {% if error_message is defined %}
+  <div class="alert alert-danger" role="alert">
+    {{ error_message }}
+  </div>
+  {% endif %}
+  <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+</form>
+<div class="table-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Expense or Income</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for count, category in categories %}
+      <tr>
+        <th scope="row">{{ count }}</th>
+        <td>{{ category.name }}</td>
+        <td>{{ category.description }}</td>
+        {% if category.is_expense %}
+        <td>Expense</td>
+        {% else %}
+        <td>Income</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
