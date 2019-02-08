@@ -35,7 +35,7 @@ def load_user(id):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    description = db.Column(db.String(128))
+    description = db.Column(db.String(128), nullable=True)
     is_expense = db.Column(db.Boolean)
     expenses = db.relationship( 'Expense', backref='category', lazy='dynamic')
     incomes = db.relationship('Income', backref='category', lazy='dynamic')

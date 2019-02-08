@@ -66,11 +66,11 @@ def logout():
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
 def categories():
-    categories = enumerate(Category.query.all(), start=1)
+    categories = enumerate(Category.query.order_by(Category.is_expense.desc()).all(), start=1)
     if request.method == 'POST':
         category = Category.query.filter_by(name=request.form.get('name')).first()
         if category is not None:
-            return render_template('categories.html', error_message=ErrorMessage.CATEGORY_ALREADY_EXISTS.value)
+            return render_template('categories.html', error_message=ErrorMessage.CATEGORY_ALREADY_EXISTS.value, categories=categories)
         category = Category(name=request.form.get('name'), is_expense=bool(int(request.form.get('expense-or-income'))),
                             description=request.form.get('description'))
         db.session.add(category)
@@ -79,11 +79,19 @@ def categories():
     return render_template('categories.html', categories=categories)
 
 
+@app.route('/delete_category', methods=['POST'])
+def delete_category():
+    category_to_delete = Category.query.filter_by(name=request.form.get('category')).first()
+    db.session.delete(category_to_delete)
+    db.session.commit()
+    return redirect(url_for('categories')) 
+
+
 @app.route('/incomes', methods=['GET', 'POST'])
 @login_required
 def incomes():
         categories = Category.query.filter_by(is_expense=False)
-        incomes = enumerate(Income.query.all(), start=1)
+        incomes = enumerate(Income.query.order_by(Income.date).all(), start=1)
         if request.method == 'POST':
             category = Category.query.filter_by(name=request.form.get('category')).first()
             income = Income(date=request.form.get(
@@ -99,7 +107,7 @@ def incomes():
 @login_required
 def expenses():
     categories = Category.query.filter_by(is_expense=True)
-    expenses = enumerate(Expense.query.all(), start=1)
+    expenses = enumerate(Expense.query.order_by(Expense.date).all(), start=1)
     if request.method == 'POST':
         category  = Category.query.filter_by(name=request.form.get('category')).first()
         expense = Expense(date=request.form.get(
