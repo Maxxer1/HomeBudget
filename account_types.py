@@ -1,0 +1,1 @@
+account_types = ["Bank account", "Wallet", "Credit card"]

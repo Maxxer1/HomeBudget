@@ -7,4 +7,5 @@ class ErrorMessage(Enum):
     USERNAME_ALREADY_EXISTS = "Username already exists"
     EMAIL_ALREADY_EXISTS = "E-mail already exists"
     CATEGORY_ALREADY_EXISTS = "Category already exists"
+    ACCOUNT_ALREADY_EXISTS = "Account already exists"
 

@@ -1,6 +1,6 @@
 {% extends "base.html"%}
 {% block content %}
-<form class="form-submit" action="/expenses" method="post">
+<form class="form-submit" action="{{ url_for('expenses') }}" method="post">
   <h3>Create Expense</h3>
   <div class="input-group mb-3">
     <input type="date" class="form-control" name="date" id="date" required title="Date of income required">

@@ -25,6 +25,7 @@
       <a class="nav-item nav-link" href="{{ url_for('login') }}">Sign In</a>
       <a class="nav-item nav-link" href="{{ url_for('register') }}">Sign Up</a>
         {% else %}
+      <a class="nav-item nav-link" href="{{ url_for('accounts') }}">Accounts</a>
       <a class="nav-item nav-link" href="{{ url_for('categories') }}">Categories</a>
       <a class="nav-item nav-link" href="{{ url_for('incomes') }}">Incomes</a>
       <a class="nav-item nav-link" href="{{ url_for('expenses') }}">Expenses</a>

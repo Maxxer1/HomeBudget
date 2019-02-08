@@ -1,10 +1,11 @@
 from app import app, db
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, UserLogin, Category, Expense, Income
+from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
 from helpers import get_user_location
+from account_types import account_types
 
 
 @app.route('/')
@@ -62,6 +63,15 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
+@app.route('/accounts', methods=['GET', 'POST'])
+@login_required
+def accounts():
+    if request.method == 'POST':
+        account = Account.query.filter_by(name=request.form.get('name')).first()
+        if account is not None:
+            return render_template('accounts.html', error_message=ErrorMessage.ACCOUNT_ALREADY_EXISTS.value)
+    return render_template('accounts.html', account_types=account_types)
 
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required

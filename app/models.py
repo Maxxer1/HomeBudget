@@ -64,3 +64,13 @@ class Income(db.Model):
 
     def __repr__(self):
         return '<Income {}>'.format(self.name)
+
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    balance = db.Column(db.Float(precision=6))
+    description = db.Column(db.String(128), index=True, nullable=True)
+    account_type = db.Column(db.String(64), index=True)
+
+    def __repr__(self):
+        return '<Account {}>'.format(self.name)
