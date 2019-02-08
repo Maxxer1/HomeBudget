@@ -34,9 +34,9 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        <th scope="col">Balance</th>
         <th scope="col">Description</th>
         <th scope="col">Account type</th>
+        <th scope="col">Balance</th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -46,13 +46,13 @@
         <form action="{{ url_for('delete_account') }}" method="post">
           <th scope="row">{{ count }}</th>
           <td>{{ account.name }}</td>
-          <td>{{ account.balance}}</td>
           {% if account.description %}
           <td>{{ account.description }}</td>
           {% else %}
           <td>-</td>
           {% endif %}
           <td>{{ account.account_type}}</td>
+          <td>{{ account.balance}}</td>
           <td>
             <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -60,6 +60,14 @@
             </button></td>
         </form>
         {% endfor %}
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>{{ total_balance }}</td>
+        <td></td>
       </tr>
     </tbody>
   </table>

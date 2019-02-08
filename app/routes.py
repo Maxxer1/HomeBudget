@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import get_user_location
+from helpers import get_user_location, calculate_total_balance
 from account_types import account_types
 
 
@@ -67,22 +67,25 @@ def logout():
 @app.route('/accounts', methods=['GET', 'POST'])
 @login_required
 def accounts():
-    accounts = enumerate(Account.query.all(), start=1)
+    accounts = Account.query.all()
     if request.method == 'POST':
-        account = Account.query.filter_by(name=request.form.get('name')).first()
+        account = Account.query.filter_by(
+            name=request.form.get('name')).first()
         if account is not None:
             return render_template('accounts.html', error_message=ErrorMessage.ACCOUNT_ALREADY_EXISTS.value)
-        account = Account(name=request.form.get('name'), balance=request.form.get('balance'), 
-        description=request.form.get('description'), account_type=request.form.get('account_type'))
+        account = Account(name=request.form.get('name'), balance=request.form.get('balance'),
+                          description=request.form.get('description'), account_type=request.form.get('account_type'))
         db.session.add(account)
         db.session.commit()
         return redirect(url_for('accounts'))
-    return render_template('accounts.html', account_types=account_types, accounts=accounts)
+    return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
+                           total_balance=calculate_total_balance(accounts))
 
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
-    account_to_delete = Account.query.filter_by(name=request.form.get('account')).first()
+    account_to_delete = Account.query.filter_by(
+        name=request.form.get('account')).first()
     db.session.delete(account_to_delete)
     db.session.commit()
     return redirect(url_for('accounts'))
@@ -91,9 +94,11 @@ def delete_account():
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
 def categories():
-    categories = enumerate(Category.query.order_by(Category.is_expense.desc()).all(), start=1)
+    categories = enumerate(Category.query.order_by(
+        Category.is_expense.desc()).all(), start=1)
     if request.method == 'POST':
-        category = Category.query.filter_by(name=request.form.get('name')).first()
+        category = Category.query.filter_by(
+            name=request.form.get('name')).first()
         if category is not None:
             return render_template('categories.html', error_message=ErrorMessage.CATEGORY_ALREADY_EXISTS.value, categories=categories)
         category = Category(name=request.form.get('name'), is_expense=bool(int(request.form.get('expense-or-income'))),
@@ -106,31 +111,35 @@ def categories():
 
 @app.route('/delete_category', methods=['POST'])
 def delete_category():
-    category_to_delete = Category.query.filter_by(name=request.form.get('category')).first()
+    category_to_delete = Category.query.filter_by(
+        name=request.form.get('category')).first()
     db.session.delete(category_to_delete)
     db.session.commit()
-    return redirect(url_for('categories')) 
+    return redirect(url_for('categories'))
 
 
 @app.route('/incomes', methods=['GET', 'POST'])
 @login_required
 def incomes():
-        categories = Category.query.filter_by(is_expense=False)
-        incomes = enumerate(Income.query.order_by(Income.date.desc()).all(), start=1)
-        if request.method == 'POST':
-            category = Category.query.filter_by(name=request.form.get('category')).first()
-            income = Income(date=request.form.get(
+    categories = Category.query.filter_by(is_expense=False)
+    incomes = enumerate(Income.query.order_by(
+        Income.date.desc()).all(), start=1)
+    if request.method == 'POST':
+        category = Category.query.filter_by(
+            name=request.form.get('category')).first()
+        income = Income(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category)
-            db.session.add(income)
-            db.session.commit()
-            return redirect(url_for('incomes'))
-        return render_template('incomes.html', categories=categories, incomes=incomes)
+        db.session.add(income)
+        db.session.commit()
+        return redirect(url_for('incomes'))
+    return render_template('incomes.html', categories=categories, incomes=incomes)
 
 
 @app.route('/delete_income', methods=['POST'])
 def delete_income():
-    income_to_delete = Income.query.filter_by(name=request.form.get('income')).first()
+    income_to_delete = Income.query.filter_by(
+        name=request.form.get('income')).first()
     db.session.delete(income_to_delete)
     db.session.commit()
     return redirect(url_for('incomes'))
@@ -140,9 +149,11 @@ def delete_income():
 @login_required
 def expenses():
     categories = Category.query.filter_by(is_expense=True)
-    expenses = enumerate(Expense.query.order_by(Expense.date.desc()).all(), start=1)
+    expenses = enumerate(Expense.query.order_by(
+        Expense.date.desc()).all(), start=1)
     if request.method == 'POST':
-        category  = Category.query.filter_by(name=request.form.get('category')).first()
+        category = Category.query.filter_by(
+            name=request.form.get('category')).first()
         expense = Expense(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category)
@@ -154,7 +165,8 @@ def expenses():
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
-    expense_to_delete = Expense.query.filter_by(name=request.form.get('expense')).first()
+    expense_to_delete = Expense.query.filter_by(
+        name=request.form.get('expense')).first()
     db.session.delete(expense_to_delete)
     db.session.commit()
     return redirect(url_for('expenses'))
