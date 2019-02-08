@@ -35,4 +35,28 @@
       {% endif %}
       <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
   </form>
+  <div class="table-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Date</th>
+        <th scope="col">Name</th>
+        <th scope="col">Ammout</th>
+        <th scope="col">Description</th>
+        <th scope="col">Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for count, expense in expenses %}
+      <tr>
+        <th scope="row">{{ count }}</th>
+        <td>{{ expense.date}}</td>
+        <td>{{ expense.name }}</td>
+        <td>{{ expense.ammout}}</td>
+        <td>{{ expense.description }}</td>
+        <td>{{ expense.category.name }}</td>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

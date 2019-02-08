@@ -27,7 +27,7 @@ def upgrade():
     op.create_index(op.f('ix_category_name'), 'category', ['name'], unique=False)
     op.create_table('expense',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('timestamp', sa.DateTime(), nullable=True),
+    sa.Column('timestamp', sa.Date(), nullable=True),
     sa.Column('ammout', sa.Float(precision=6), nullable=True),
     sa.Column('description', sa.String(length=128), nullable=True),
     sa.Column('category_id', sa.Integer(), nullable=True),

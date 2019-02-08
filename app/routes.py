@@ -83,6 +83,7 @@ def categories():
 @login_required
 def incomes():
         categories = Category.query.filter_by(is_expense=False)
+        incomes = enumerate(Income.query.all(), start=1)
         if request.method == 'POST':
             category = Category.query.filter_by(name=request.form.get('category')).first()
             income = Income(date=request.form.get(
@@ -90,13 +91,15 @@ def incomes():
             description=request.form.get('description'), category=category)
             db.session.add(income)
             db.session.commit()
-        return render_template('incomes.html', categories=categories)
+            return redirect(url_for('incomes'))
+        return render_template('incomes.html', categories=categories, incomes=incomes)
 
 
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
     categories = Category.query.filter_by(is_expense=True)
+    expenses = enumerate(Expense.query.all(), start=1)
     if request.method == 'POST':
         category  = Category.query.filter_by(name=request.form.get('category')).first()
         expense = Expense(date=request.form.get(
@@ -104,4 +107,5 @@ def expenses():
             description=request.form.get('description'), category=category)
         db.session.add(expense)
         db.session.commit()
-    return render_template('expenses.html', categories=categories)
+        return redirect(url_for('expenses'))
+    return render_template('expenses.html', categories=categories, expenses=expenses)
