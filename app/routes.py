@@ -91,7 +91,7 @@ def delete_category():
 @login_required
 def incomes():
         categories = Category.query.filter_by(is_expense=False)
-        incomes = enumerate(Income.query.order_by(Income.date).all(), start=1)
+        incomes = enumerate(Income.query.order_by(Income.date.desc()).all(), start=1)
         if request.method == 'POST':
             category = Category.query.filter_by(name=request.form.get('category')).first()
             income = Income(date=request.form.get(
@@ -115,7 +115,7 @@ def delete_income():
 @login_required
 def expenses():
     categories = Category.query.filter_by(is_expense=True)
-    expenses = enumerate(Expense.query.order_by(Expense.date).all(), start=1)
+    expenses = enumerate(Expense.query.order_by(Expense.date.desc()).all(), start=1)
     if request.method == 'POST':
         category  = Category.query.filter_by(name=request.form.get('category')).first()
         expense = Expense(date=request.form.get(
