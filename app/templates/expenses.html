@@ -40,18 +40,26 @@
         <th scope="col">Ammout</th>
         <th scope="col">Description</th>
         <th scope="col">Category</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       {% for count, expense in expenses %}
       <tr>
+        <form action="{{ url_for('delete_expense') }}" method="post">
         <th scope="row">{{ count }}</th>
         <td>{{ expense.date}}</td>
         <td>{{ expense.name }}</td>
         <td>{{ expense.ammout}}</td>
         <td>{{ expense.description }}</td>
         <td>{{ expense.category.name }}</td>
+        <td><button type="submit" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          <input type="hidden" name="expense" value="{{ expense.name }}">
+        </button></td>
+        </form>
       {% endfor %}
+        </tr>
     </tbody>
   </table>
 {% endblock %}

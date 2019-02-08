@@ -103,6 +103,14 @@ def incomes():
         return render_template('incomes.html', categories=categories, incomes=incomes)
 
 
+@app.route('/delete_income', methods=['POST'])
+def delete_income():
+    income_to_delete = Income.query.filter_by(name=request.form.get('income')).first()
+    db.session.delete(income_to_delete)
+    db.session.commit()
+    return redirect(url_for('incomes'))
+
+
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
 def expenses():
@@ -117,3 +125,11 @@ def expenses():
         db.session.commit()
         return redirect(url_for('expenses'))
     return render_template('expenses.html', categories=categories, expenses=expenses)
+
+
+@app.route('/delete_expense', methods=['POST'])
+def delete_expense():
+    expense_to_delete = Expense.query.filter_by(name=request.form.get('expense')).first()
+    db.session.delete(expense_to_delete)
+    db.session.commit()
+    return redirect(url_for('expenses'))

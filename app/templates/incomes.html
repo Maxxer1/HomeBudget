@@ -1,36 +1,36 @@
 {% extends "base.html"%}
 {% block content %}
 <form class="form-submit" action="/incomes" method="post">
-    <h3>Create Income</h3>
-      <div class="form-group">
-        <input type="date" class="form-control" name="date" id="date" required title="Date of income required">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="name" id="name"
-        placeholder="Enter name" required title="Name of income required">
-        </div>
-      <div class="form-group">
-          <input type="number" step="0.01" class="form-control" name="ammout" id="ammout" 
-          placeholder="Enter ammout" required title="Ammout of income required">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
-      </div>
-      <div class="form-group">
-        <select class="custom-select" name="category" id="category">
-          {% for category in categories %}
-          <option value="{{ category.name }}">{{ category.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      {% if error_message is defined %}
-      <div class="alert alert-danger" role="alert">
-          {{ error_message }}
-      </div>
-      {% endif %}
-      <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
-  </form>
-  <div class="table-container">
+  <h3>Create Income</h3>
+  <div class="form-group">
+    <input type="date" class="form-control" name="date" id="date" required title="Date of income required">
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" name="name" id="name" placeholder="Enter name" required
+      title="Name of income required">
+  </div>
+  <div class="form-group">
+    <input type="number" step="0.01" class="form-control" name="ammout" id="ammout" placeholder="Enter ammout" required
+      title="Ammout of income required">
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
+  </div>
+  <div class="form-group">
+    <select class="custom-select" name="category" id="category">
+      {% for category in categories %}
+      <option value="{{ category.name }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% if error_message is defined %}
+  <div class="alert alert-danger" role="alert">
+    {{ error_message }}
+  </div>
+  {% endif %}
+  <button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+</form>
+<div class="table-container">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -40,18 +40,27 @@
         <th scope="col">Ammout</th>
         <th scope="col">Description</th>
         <th scope="col">Category</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       {% for count, income in incomes%}
       <tr>
-        <th scope="row">{{ count }}</th>
-        <td>{{ income.date}}</td>
-        <td>{{ income.name }}</td>
-        <td>{{ income.ammout}}</td>
-        <td>{{ income .description }}</td>
-        <td>{{ income .category.name }}</td>
-      {% endfor %}
+        <form action="{{ url_for('delete_income') }}" method="post">
+          <th scope="row">{{ count }}</th>
+          <td>{{ income.date}}</td>
+          <td>{{ income.name }}</td>
+          <td>{{ income.ammout}}</td>
+          <td>{{ income .description }}</td>
+          <td>{{ income .category.name }}</td>
+          <td>
+            <button type="submit" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              <input type="hidden" name="income" value="{{ income.name }}">
+            </button></td>
+        </form>
+        {% endfor %}
+      </tr>
     </tbody>
   </table>
-{% endblock %}
+  {% endblock %}
