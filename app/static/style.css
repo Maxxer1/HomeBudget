@@ -5,6 +5,10 @@
   margin: auto;
 }
 
+.form-small{
+  max-width: 330px;
+}
+
 .form-submit .form-check {
     text-align: center;
 }

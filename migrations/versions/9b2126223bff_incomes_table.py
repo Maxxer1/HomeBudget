@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('date', sa.Date(), nullable=True),
     sa.Column('name', sa.String(length=128), nullable=True),
     sa.Column('ammout', sa.Float(precision=6), nullable=True),
-    sa.Column('description', sa.String(length=128), nullable=True),
+    sa.Column('description', sa.String(length=128), default=None),
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['category_id'], ['category.id'], ),
     sa.PrimaryKeyConstraint('id')

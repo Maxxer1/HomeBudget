@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=128), nullable=True),
     sa.Column('balance', sa.Float(precision=6), nullable=True),
-    sa.Column('description', sa.String(length=128), nullable=True),
+    sa.Column('description', sa.String(length=128), default=None),
     sa.Column('account_type', sa.String(length=64), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )

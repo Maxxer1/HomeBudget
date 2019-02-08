@@ -1,9 +1,9 @@
 {% extends "base.html"%}
 {% block content %}
 <form class="form-submit" action="{{ url_for('incomes') }}" method="post">
-  <h3>Create Income</h3>
+  <h3>Manage Incomes</h3>
   <div class="input-group mb-3">
-    <input type="date" class="form-control" name="date" id="date" required title="Date of income required">
+    <input type="text" class="form-control" name="date" id="date" required title="Date of income required">
 <div class="input-group-append">
     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
   </div>
@@ -54,8 +54,12 @@
           <td>{{ income.date}}</td>
           <td>{{ income.name }}</td>
           <td>{{ income.ammout}}</td>
-          <td>{{ income .description }}</td>
-          <td>{{ income .category.name }}</td>
+          {% if income.description %}
+          <td>{{ income.description }}</td>
+          {% else %}
+          <td>-</td>
+          {% endif %}
+          <td>{{ income.category.name }}</td>
           <td>
             <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>

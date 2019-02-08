@@ -35,7 +35,7 @@ def load_user(id):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    description = db.Column(db.String(128), nullable=True)
+    description = db.Column(db.String(128), default=None)
     is_expense = db.Column(db.Boolean)
     expenses = db.relationship( 'Expense', backref='category', lazy='dynamic')
     incomes = db.relationship('Income', backref='category', lazy='dynamic')
@@ -48,7 +48,7 @@ class Expense(db.Model):
     date = db.Column(db.Date, index=True)
     name = db.Column(db.String(128), index=True)
     ammout = db.Column(db.Float(precision=6))
-    description = db.Column(db.String(128), index=True, nullable=True)
+    description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     def __repr__(self):
@@ -59,7 +59,7 @@ class Income(db.Model):
     date = db.Column(db.Date, index=True)
     name = db.Column(db.String(128), index=True)
     ammout = db.Column(db.Float(precision=6))
-    description = db.Column(db.String(128), index=True, nullable=True)
+    description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     def __repr__(self):

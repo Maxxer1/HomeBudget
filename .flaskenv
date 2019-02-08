@@ -1,1 +1,1 @@
-FLASK_APP=budget.py
+FLASK_APP=app.py

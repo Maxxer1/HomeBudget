@@ -67,11 +67,26 @@ def logout():
 @app.route('/accounts', methods=['GET', 'POST'])
 @login_required
 def accounts():
+    accounts = enumerate(Account.query.all(), start=1)
     if request.method == 'POST':
         account = Account.query.filter_by(name=request.form.get('name')).first()
         if account is not None:
             return render_template('accounts.html', error_message=ErrorMessage.ACCOUNT_ALREADY_EXISTS.value)
-    return render_template('accounts.html', account_types=account_types)
+        account = Account(name=request.form.get('name'), balance=request.form.get('balance'), 
+        description=request.form.get('description'), account_type=request.form.get('account_type'))
+        db.session.add(account)
+        db.session.commit()
+        return redirect(url_for('accounts'))
+    return render_template('accounts.html', account_types=account_types, accounts=accounts)
+
+
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    account_to_delete = Account.query.filter_by(name=request.form.get('account')).first()
+    db.session.delete(account_to_delete)
+    db.session.commit()
+    return redirect(url_for('accounts'))
+
 
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
