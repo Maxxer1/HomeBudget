@@ -1,4 +1,5 @@
 import requests
+from app import db
 
 # TODO Parametrize function with ip
 def get_user_location():
@@ -12,3 +13,16 @@ def calculate_total_balance(accounts):
     for account in accounts:
         total_balance += account.balance
     return total_balance
+
+
+def lower_balance(account, expense):
+    account.balance = account.balance - float(expense.ammout)
+    return account.balance
+
+
+def increment_balance(account, income):
+    account.balance = account.balance + float(income.ammout)
+    return account.balance
+
+
+    

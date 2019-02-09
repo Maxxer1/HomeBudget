@@ -59,6 +59,7 @@ class Expense(db.Model):
     description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
 
     def __repr__(self):
         return '<{} {}>'.format(__class__.__name__, self.name)
@@ -71,6 +72,7 @@ class Income(db.Model):
     description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    account_id = db.Column(db.Integer, db.ForeignKey('account.id'))
 
     def __repr__(self):
         return '<{} {}>'.format(__class__.__name__, self.name)
@@ -82,6 +84,8 @@ class Account(db.Model):
     description = db.Column(db.String(128), index=True, nullable=True)
     account_type = db.Column(db.String(64), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    incomes = db.relationship('Income', backref='account', lazy='dynamic')
+    expenses = db.relationship('Expense', backref='account', lazy='dynamic')
 
     def __repr__(self):
         return '<{} {}>'.format(__class__.__name__, self.name)

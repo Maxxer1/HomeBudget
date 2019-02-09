@@ -3,7 +3,7 @@
 <form class="form-submit" action="{{ url_for('incomes') }}" method="post">
   <h3>Manage Incomes</h3>
   <div class="input-group mb-3">
-    <input type="text" class="form-control" name="date" id="date" required title="Date of income required">
+    <input type="date" class="form-control" name="date" id="date" required title="Date of income required">
 <div class="input-group-append">
     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
   </div>
@@ -15,6 +15,11 @@
     <select class="custom-select" name="category" id="category">
       {% for category in categories %}
       <option value="{{ category.name }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+    <select class="custom-select" name="account" id="account">
+      {% for account in accounts %}
+      <option value="{{ account.name }}">{{ account.name }}</option>
       {% endfor %}
     </select>
     <div class="input-group-append">
@@ -43,6 +48,7 @@
         <th scope="col">Ammout</th>
         <th scope="col">Description</th>
         <th scope="col">Category</th>
+        <th scope="col">Account</th>
         <th scope="col"></th>
       </tr>
     </thead>
@@ -60,6 +66,7 @@
           <td>-</td>
           {% endif %}
           <td>{{ income.category.name }}</td>
+          <td>{{ income.account.name }}</td>
           <td>
             <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>

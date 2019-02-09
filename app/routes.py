@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import get_user_location, calculate_total_balance
+from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance
 from account_types import account_types
 
 
@@ -123,18 +123,22 @@ def delete_category():
 @login_required
 def incomes():
     categories = Category.query.filter_by(user=current_user, is_expense=False)
+    accounts = Account.query.filter_by(user=current_user)
     incomes = enumerate(Income.query.filter_by(user=current_user).order_by(
         Income.date.desc()).all(), start=1)
     if request.method == 'POST':
         category = Category.query.filter_by(user=current_user,
             name=request.form.get('category')).first()
+        account = Account.query.filter_by(user=current_user,
+        name=request.form.get('account')).first()
         income = Income(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
-            description=request.form.get('description'), category=category)
-        db.session.add(income)
+            description=request.form.get('description'), category=category, user=current_user, account=account)
+        increment_balance(account, income)
+        db.session.add(income, account)
         db.session.commit()
         return redirect(url_for('incomes'))
-    return render_template('incomes.html', categories=categories, incomes=incomes)
+    return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts)
 
 
 @app.route('/delete_income', methods=['POST'])
@@ -156,10 +160,13 @@ def expenses():
     if request.method == 'POST':
         category = Category.query.filter_by(user=current_user,
             name=request.form.get('category')).first()
+        account = Account.query.filter_by(user=current_user,
+        name=request.form.get('account')).first()
         expense = Expense(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
-            description=request.form.get('description'), category=category, accounts=accounts)
-        db.session.add(expense)
+            description=request.form.get('description'), category=category, user=current_user, account=account)
+        lower_balance(account, expense)
+        db.session.add(account, expense)
         db.session.commit()
         return redirect(url_for('expenses'))
     return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts)
