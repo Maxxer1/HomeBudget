@@ -10,6 +10,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), index=True, unique=True)
     password = db.Column(db.String(128))
     logins = db.relationship('UserLogin', backref='user', lazy='dynamic')
+    categories = db.relationship('Category', backref='user', lazy='dynamic')
+    expenses = db.relationship('Expense', backref='user', lazy='dynamic')
+    incomes = db.relationship('Income', backref='user', lazy='dynamic')
+    accounts = db.relationship('Account', backref='user', lazy='dynamic')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -18,7 +22,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<{} {}>'.format(__class__.__name__, self.username)
 
 class UserLogin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +31,9 @@ class UserLogin(db.Model):
     city = db.Column(db.String(128), index=True)
     country = db.Column(db.String(128), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '{} {}'.format(__class__.__name__, self.ip)
 
 @login.user_loader
 def load_user(id):
@@ -37,11 +44,12 @@ class Category(db.Model):
     name = db.Column(db.String(64), index=True)
     description = db.Column(db.String(128), default=None)
     is_expense = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     expenses = db.relationship( 'Expense', backref='category', lazy='dynamic')
     incomes = db.relationship('Income', backref='category', lazy='dynamic')
 
     def __repr__(self):
-        return '<Category {}>'.format(self.name)
+        return '<{} {}>'.format(__class__.__name__, self.name)
 
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,9 +58,10 @@ class Expense(db.Model):
     ammout = db.Column(db.Float(precision=6))
     description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Expense {}>'.format(self.name)
+        return '<{} {}>'.format(__class__.__name__, self.name)
 
 class Income(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -61,9 +70,10 @@ class Income(db.Model):
     ammout = db.Column(db.Float(precision=6))
     description = db.Column(db.String(128), index=True, default=None)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Income {}>'.format(self.name)
+        return '<{} {}>'.format(__class__.__name__, self.name)
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +81,7 @@ class Account(db.Model):
     balance = db.Column(db.Float(precision=6))
     description = db.Column(db.String(128), index=True, nullable=True)
     account_type = db.Column(db.String(64), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Account {}>'.format(self.name)
+        return '<{} {}>'.format(__class__.__name__, self.name)

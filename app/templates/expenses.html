@@ -17,6 +17,11 @@
       <option value="{{ category.name }}">{{ category.name }}</option>
       {% endfor %}
     </select>
+    <select class="custom-select" name="account" id="account">
+      {% for account in accounts %}
+      <option value="{{ account.name }}">{{ account.name }}</option>
+      {% endfor %}
+    </select>
     <div class="input-group-append">
         <button class="btn btn-primary" type="submit">Create</button>
     </div>  
