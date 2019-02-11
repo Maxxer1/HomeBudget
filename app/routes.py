@@ -4,8 +4,9 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance
+from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance, get_currency_rate, convert_balance
 from account_types import account_types
+from currencies import currencies
 
 
 @app.route('/')
@@ -74,13 +75,15 @@ def accounts():
         if account is not None:
             return render_template('accounts.html', error_message=ErrorMessage.ACCOUNT_ALREADY_EXISTS.value)
         account = Account(name=request.form.get('name'), balance=request.form.get('balance'),
-                          description=request.form.get('description'), account_type=request.form.get('account_type'), 
-                          user=current_user)
+                          description=request.form.get('description'), currency=request.form.get('currency'), 
+                          account_type=request.form.get('account_type'), user=current_user)
+        rate = get_currency_rate(account.currency, 'USD') 
+        convert_balance(account, rate)
         db.session.add(account)
         db.session.commit()
         return redirect(url_for('accounts'))
     return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
-                           total_balance=calculate_total_balance(accounts))
+                           total_balance=calculate_total_balance(accounts), currencies=currencies)
 
 
 @app.route('/delete_account', methods=['POST'])

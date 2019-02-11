@@ -7,8 +7,13 @@
     <input type="number" min="0" step="0.01" class="form-control" name="balance" id="balance" placeholder="Enter balance"
       required title="Balance required">
     <input type="text" class="form-control" name="description" id="description" placeholder="Enter description">
+    <select class="custom-select" name="currency" id="currency">
+      {% for currency in currencies %}
+      <option value="{{ currency }}">{{ currency }}</option>
+      {% endfor %}
+    </select>
     <select class="custom-select" name="account_type" id="account_type">
-      {% for account_type in  account_types %}
+      {% for account_type in account_types %}
       <option value="{{ account_type }}">{{ account_type }}</option>
       {% endfor %}
     </select>
@@ -52,7 +57,7 @@
           <td>-</td>
           {% endif %}
           <td>{{ account.account_type}}</td>
-          <td>{{ account.balance}}</td>
+          <td>{{ account.balance}}{{ account.currency }}</td>
           <td>
             <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>

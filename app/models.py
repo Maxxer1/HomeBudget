@@ -82,6 +82,7 @@ class Account(db.Model):
     name = db.Column(db.String(128), index=True)
     balance = db.Column(db.Float(precision=6))
     description = db.Column(db.String(128), index=True, nullable=True)
+    currency = db.Column(db.String(8), index=True)
     account_type = db.Column(db.String(64), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     incomes = db.relationship('Income', backref='account', lazy='dynamic')
