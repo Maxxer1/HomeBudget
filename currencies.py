@@ -1,1 +1,1 @@
-currencies = {'PLN': 'zł', 'USD': '$', 'EUR': '€', 'GPB': '£'}
+currencies = {'PLN': 'zł', 'USD': '$', 'EUR': '€', 'GBP': '£'}

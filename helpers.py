@@ -25,12 +25,16 @@ def increment_balance(account, income):
     return account.balance
 
 
-def get_currency_rate(account_currency, foreign_currency):
-    r = requests.get('https://api.exchangeratesapi.io/latest?base={}'.format(account_currency))
-    data = r.json()
-    return data['rates'][foreign_currency]
-
-
 def convert_balance(account, foreign_currency):
-    account.balance = float(account.balance) * foreign_currency
+    '''Converts balance of single account to desired currency'''
+    r = requests.get('https://api.exchangeratesapi.io/latest?base={}'.format(account.currency))
+    data = r.json()
+    account.balance = float(account.balance) * data['rates'][foreign_currency]
     return account.balance
+
+
+def convert_total_balance(accounts, foreign_currency):
+    '''Returns total balance of an account after currency exchange'''
+    for account in accounts:
+        convert_balance(account, foreign_currency)
+    return calculate_total_balance(accounts)

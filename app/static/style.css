@@ -9,6 +9,10 @@
   max-width: 330px;
 }
 
+.form-filter {
+  max-width: 480px;
+}
+
 .form-submit .form-check {
     text-align: center;
 }

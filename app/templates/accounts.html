@@ -19,7 +19,7 @@
     </select>
     <div class="input-group-append">
         <button class="btn btn-primary" type="submit">Create</button>
-    </div>  
+    </div>
   </div>
   {% if error_message is defined %}
   <div class="alert alert-danger" role="alert">
@@ -32,6 +32,21 @@
     {{ error_message }}
   </div>
   {% endif %}
+</form>
+<form class="form-filter form-submit" action="/change_currency" method="post">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">Show total balance in:</span>
+    </div>
+    <select class="custom-select" name="currency" id="currency">
+      {% for currency in currencies %}
+      <option value="{{ currency }}">{{ currency }}</option>
+      {% endfor %}
+    </select>
+    <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">Show</button>
+    </div>
+  </div>
 </form>
 <div class="table-container">
   <table class="table table-striped">
@@ -71,7 +86,11 @@
         <td></td>
         <td></td>
         <td></td>
+        {% if total_balance %}
         <td>{{ total_balance }}</td>
+        {% else %}
+        <td>0.0</td>
+        {% endif %}
         <td></td>
       </tr>
     </tbody>
