@@ -5,3 +5,4 @@ flask-migrate
 flask-login
 mysql-connector-python
 requests
+apscheduler

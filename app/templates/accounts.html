@@ -33,7 +33,7 @@
   </div>
   {% endif %}
 </form>
-<form class="form-filter form-submit" action="/change_currency" method="post">
+<form class="form-filter form-submit" action="{{ url_for('change_currency')}}" method="post">
   <div class="input-group">
     <div class="input-group-prepend">
       <span class="input-group-text" id="basic-addon1">Show total balance in:</span>
@@ -86,11 +86,7 @@
         <td></td>
         <td></td>
         <td></td>
-        {% if total_balance %}
-        <td>{{ total_balance }}</td>
-        {% else %}
-        <td>0.0</td>
-        {% endif %}
+        <td>{{ total_balance }}{{ total_balance_currency }}</td>
         <td></td>
       </tr>
     </tbody>

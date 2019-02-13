@@ -1,10 +1,10 @@
 from app import app, db
-from flask import render_template, url_for, request, redirect
+from flask import render_template, url_for, request, redirect, session
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance, get_currency_rate, convert_balance
+from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance, convert_balance, convert_total_balance
 from account_types import account_types
 from currencies import currencies
 
@@ -77,14 +77,22 @@ def accounts():
         account = Account(name=request.form.get('name'), balance=request.form.get('balance'),
                           description=request.form.get('description'), currency=request.form.get('currency'), 
                           account_type=request.form.get('account_type'), user=current_user)
-        rate = get_currency_rate(account.currency, 'USD') 
-        convert_balance(account, rate)
         db.session.add(account)
         db.session.commit()
         return redirect(url_for('accounts'))
     return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
                            total_balance=calculate_total_balance(accounts), currencies=currencies)
 
+
+@app.route('/change_currency', methods=['POST'])
+def change_currency():
+    if request.method == 'POST':
+        accounts = Account.query.filter_by(user=current_user)
+        converted_balance = convert_total_balance(accounts, request.form.get('currency'))
+        for account in accounts:
+            account.currency = request.form.get('currency')
+        return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
+        total_balance=converted_balance, currencies=currencies, total_balance_currency=request.form.get('currency'))
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
