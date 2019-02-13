@@ -162,8 +162,10 @@ def incomes():
 
 @app.route('/delete_income', methods=['POST'])
 def delete_income():
+    account = Account.query.filter_by(user=current_user, name=request.form.get('account')).first()
     income_to_delete = Income.query.filter_by(user=current_user,
                                               name=request.form.get('income')).first()
+    lower_balance(account, income_to_delete)
     db.session.delete(income_to_delete)
     db.session.commit()
     return redirect(url_for('incomes'))
