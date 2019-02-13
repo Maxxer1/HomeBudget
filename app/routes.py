@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import calculate_total_balance, lower_balance, increment_balance, convert_balance, convert_total_balance, get_currency_rate_date
+from helpers import calculate_total_balance, convert_balance, convert_total_balance, get_currency_rate_date
 from account_types import account_types
 from currencies import currencies
 
@@ -153,7 +153,7 @@ def incomes():
         income = Income(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category, user=current_user, account=account)
-        increment_balance(account, income)
+        account.increment_balance(income.ammout)
         db.session.add(income, account)
         db.session.commit()
         return redirect(url_for('incomes'))
@@ -186,7 +186,7 @@ def expenses():
         expense = Expense(date=request.form.get(
             'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category, user=current_user, account=account)
-        lower_balance(account, expense)
+        account.lower_balance(expense.ammout)
         db.session.add(account, expense)
         db.session.commit()
         return redirect(url_for('expenses'))

@@ -104,16 +104,16 @@ class Account(db.Model):
     expenses = db.relationship('Expense', backref='account', lazy='dynamic')
 
     def lower_balance(self, ammout):
-    '''Lowers account balance by given ammout'''
-    self.balance = self.balance - ammout
-    return self.balance
+        '''Lowers account balance by given ammout'''
+        self.balance = self.balance - float(ammout)
+        return self.balance
 
     def increment_balance(self, ammout):
-    '''Increments accountbalance by given ammout'''
-    self.balance = self.balance + ammout
-    return self.balance
+        '''Increments accountbalance by given ammout'''
+        self.balance = self.balance + float(ammout)
+        return self.balance
 
-    
+
 
     def __repr__(self):
         return '<{} {}>'.format(__class__.__name__, self.name)
