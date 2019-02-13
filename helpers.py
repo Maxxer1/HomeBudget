@@ -34,7 +34,7 @@ def convert_from_euro(account, rates, foreign_currency):
         account.balance = float(account.balance) * (euro_rate / usd_rate)
     elif foreign_currency == 'GBP':
         account.balance = float(account.balance) * (euro_rate / gbp_rate)
-    return account.balance
+    return round(account.balance, 2)
 
 def convert_from_usd(account, rates, foreign_currency):
     euro_rate = rates['rates']['EUR']
@@ -46,7 +46,7 @@ def convert_from_usd(account, rates, foreign_currency):
         account.balance = float(account.balance) * (usd_rate / euro_rate)
     elif foreign_currency == 'GBP':
         account.balance = float(account.balance) * (gbp_rate / usd_rate)
-    return account.balance
+    return round(account.balance, 2)
 
 
 def convert_from_gbp(account, rates, foreign_currency):
@@ -59,7 +59,7 @@ def convert_from_gbp(account, rates, foreign_currency):
         account.balance = float(account.balance) * (gbp_rate / euro_rate)
     elif foreign_currency == 'USD':
         account.balance = float(account.balance) * (gbp_rate / usd_rate)
-    return account.balance
+    return round(account.balance, 2)
 
 
 def convert_from_pln(account, rates, foreign_currency):
@@ -72,9 +72,9 @@ def convert_from_pln(account, rates, foreign_currency):
         account.balance = float(account.balance) * usd_rate
     elif foreign_currency == 'GBP':
         account.balance = float(account.balance) * gbp_rate
-    return account.balance
+    return round(account.balance, 2)
 
-    
+
 def convert_balance(account, foreign_currency, rates=rates):
     '''Converts balance of single account to desired currency'''
     if account.currency == 'EUR':
@@ -92,4 +92,4 @@ def convert_total_balance(accounts, foreign_currency):
     '''Returns total balance of an account after currency exchange'''
     for account in accounts:
         convert_balance(account, foreign_currency)
-    return calculate_total_balance(accounts)
+    return round(calculate_total_balance(accounts), 2)

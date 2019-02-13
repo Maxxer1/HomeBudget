@@ -81,6 +81,7 @@
         </form>
         {% endfor %}
       </tr>
+      {% if total_balance %}
       <tr>
         <td></td>
         <td></td>
@@ -89,6 +90,7 @@
         <td>{{ total_balance }}{{ total_balance_currency }}</td>
         <td></td>
       </tr>
+      {% endif %}
     </tbody>
   </table>
   {% endblock %}

@@ -81,18 +81,19 @@ def accounts():
         db.session.commit()
         return redirect(url_for('accounts'))
     return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
-                           total_balance=calculate_total_balance(accounts), currencies=currencies)
+                           currencies=currencies)
 
 
 @app.route('/change_currency', methods=['POST'])
 def change_currency():
     if request.method == 'POST':
         accounts = Account.query.filter_by(user=current_user)
-        converted_balance = convert_total_balance(accounts, request.form.get('currency'))
+        total_balance = convert_total_balance(accounts, request.form.get('currency'))
         for account in accounts:
             account.currency = request.form.get('currency')
         return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
-        total_balance=converted_balance, currencies=currencies, total_balance_currency=request.form.get('currency'))
+        total_balance=total_balance, currencies=currencies, total_balance_currency=request.form.get('currency'))
+
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
