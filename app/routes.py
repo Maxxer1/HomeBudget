@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import get_user_location, calculate_total_balance, lower_balance, increment_balance, convert_balance, convert_total_balance, get_currency_rate_date
+from helpers import calculate_total_balance, lower_balance, increment_balance, convert_balance, convert_total_balance, get_currency_rate_date
 from account_types import account_types
 from currencies import currencies
 
@@ -24,7 +24,7 @@ def login():
         if user is not None and user.check_password(request.form.get('password')):
             login_user(user, remember=request.form.get(
                 'remember-me'), duration=timedelta(seconds=15))
-            city, country = get_user_location()
+            city, country = UserLogin.get_user_location()
             user_login_data = UserLogin(
                 ip=request.remote_addr, city=city, country=country, user=user)
             db.session.add(user_login_data)
