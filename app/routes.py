@@ -4,7 +4,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogin, Category, Expense, Income, Account
 from datetime import timedelta
 from error_messages import ErrorMessage
-from helpers import calculate_total_balance, convert_balance, convert_total_balance, get_currency_rate_date
+from currency_rate_scheduler import get_currency_rate_date
+from accounts_helpers import convert_total_balance
 from account_types import account_types
 from currencies import currencies
 
@@ -92,10 +93,7 @@ def change_currency():
         if request.form.get('reset'):
             return redirect(url_for('accounts'))
         accounts = Account.query.filter_by(user=current_user)
-        total_balance = convert_total_balance(
-            accounts, request.form.get('currency'))
-        for account in accounts:
-            account.currency = request.form.get('currency')
+        total_balance = convert_total_balance(accounts, request.form.get('currency'))
         return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
                                total_balance=total_balance, currencies=currencies, 
                                total_balance_currency=request.form.get('currency'), currency_rate_date=get_currency_rate_date())
