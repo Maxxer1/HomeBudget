@@ -25,6 +25,12 @@
   text-align: center;
 }
 
+.currency-rate-date{
+  text-align: left;
+  font-size: 10px;
+  color: gray;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #007bff;

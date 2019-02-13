@@ -36,7 +36,7 @@
 <form class="form-filter form-submit" action="{{ url_for('change_currency')}}" method="post">
   <div class="input-group">
     <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1">Show total balance in:</span>
+      <span class="input-group-text" id="basic-addon1">Show accounts balance in:</span>
     </div>
     <select class="custom-select" name="currency" id="currency">
       {% for currency in currencies %}
@@ -44,8 +44,12 @@
       {% endfor %}
     </select>
     <div class="input-group-append">
-        <button class="btn btn-primary" type="submit">Show</button>
+       <button class="btn btn-primary" name="submit" type="submit">Show</button>
+       <button class="btn btn-primary" type='submit' name="reset" value="reset">Reset</button></a>
     </div>
+  </div>
+  <div class="currency-rate-date">
+      <label>Currency rates for {{ currency_rate_date }}</label>
   </div>
 </form>
 <div class="table-container">
@@ -72,7 +76,7 @@
           <td>-</td>
           {% endif %}
           <td>{{ account.account_type}}</td>
-          <td>{{ account.balance}}{{ account.currency }}</td>
+          <td>{{ account.balance}} {{ account.currency }}</td>
           <td>
             <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -87,7 +91,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td>{{ total_balance }}{{ total_balance_currency }}</td>
+        <td><b>{{ total_balance }}</b> {{ total_balance_currency }}</td>
         <td></td>
       </tr>
       {% endif %}
