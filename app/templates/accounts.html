@@ -27,11 +27,6 @@
   </div>
   {% endif %}
   </div>
-  {% if error_message is defined %}
-  <div class="alert alert-danger" role="alert">
-    {{ error_message }}
-  </div>
-  {% endif %}
 </form>
 <form class="form-filter form-submit" action="{{ url_for('change_currency')}}" method="post">
   <div class="input-group">
