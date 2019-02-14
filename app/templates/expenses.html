@@ -62,6 +62,7 @@
           {% endif %}
           <td>{{ expense.category.name }}</td>
           <td>{{ expense.account.name }}</td>
+          <input type="hidden" name="account" value="{{ expense.account.name }}">
           <td><button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               <input type="hidden" name="expense" value="{{ expense.name }}">

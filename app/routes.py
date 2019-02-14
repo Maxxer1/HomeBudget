@@ -163,7 +163,7 @@ def delete_income():
     account = Account.query.filter_by(user=current_user, name=request.form.get('account')).first()
     income_to_delete = Income.query.filter_by(user=current_user,
                                               name=request.form.get('income')).first()
-    lower_balance(account, income_to_delete)
+    account.lower_balance(income_to_delete.ammout) 
     db.session.delete(income_to_delete)
     db.session.commit()
     return redirect(url_for('incomes'))
@@ -193,8 +193,10 @@ def expenses():
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
+    account = Account.query.filter_by(user=current_user, name=request.form.get('account')).first()
     expense_to_delete = Expense.query.filter_by(user=current_user,
                                                 name=request.form.get('expense')).first()
+    account.increment_balance(expense_to_delete.ammout)
     db.session.delete(expense_to_delete)
     db.session.commit()
     return redirect(url_for('expenses'))
