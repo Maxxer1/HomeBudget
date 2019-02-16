@@ -8,7 +8,7 @@ from currency_rate_scheduler import get_currency_rate_date
 from accounts_helpers import convert_total_balance
 from account_types import account_types
 from currencies import currencies
-from calendar_helpers import get_month_dates, filter_expenses_by_month, months
+from calendar_helpers import get_month_dates, filter_expenses_by_month, months, years
 
 
 @app.route('/')
@@ -190,7 +190,7 @@ def expenses():
         db.session.commit()
         return redirect(url_for('expenses'))
     return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts,
-                            months=months)
+                            months=months, years=years)
 
 
 @app.route('/delete_expense', methods=['POST'])
@@ -213,8 +213,8 @@ def filter_expenses():
     if request.method == 'POST':
         if request.form.get('reset'):
             return redirect(url_for('expenses'))
-        print(request.form.get('month'))
-        dates = get_month_dates(int(request.form.get('month')))
+        dates = get_month_dates(int(request.form.get('month')), int(request.form.get('year')))
         expenses = filter_expenses_by_month(expenses, dates)
-    return render_template('expenses.html', categories=categories, expenses=enumerate(expenses, start=1), accounts=accounts,
-                            months=months)
+        expenses = enumerate((expense for expense in expenses), start=1)
+    return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts,
+                            months=months, years=years)

@@ -43,6 +43,11 @@
       <option value="{{ number }}">{{ month }}</option>
       {% endfor %}
     </select>
+    <select class="custom-select" name="year" id="year">
+      {% for year in years %}
+      <option value="{{ year }}">{{ year }}</option>
+      {% endfor %}
+    </select>
     <div class="input-group-append">
        <button class="btn btn-primary" name="submit" type="submit">Show</button>
        <button class="btn btn-primary" type='submit' name="reset" value="reset">Reset</button></a>

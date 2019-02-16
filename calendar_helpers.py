@@ -1,6 +1,35 @@
 from calendar import Calendar
 from datetime import date
 
+calendar = Calendar()
+
+
+def get_month_dates(month, year):
+    month_dates = calendar.itermonthdates(year, month)
+    for date in month_dates:
+        if date.month is month:
+            yield date
+
+
+def filter_expenses_by_month(expenses, dates):
+    for expense in expenses:
+        for date in dates:
+            if expense.date.month != date.month:
+                break
+            if expense.date.month == date.month and expense.date.year == date.year:
+                yield expense
+                break
+
+
+def get_years(start, end):
+    years = []
+    if start > end:
+        raise ValueError('End is bigger than start')
+    for year in range(start, end):
+        years.append(year)
+    return years
+
+
 months = {'January': 1,
           'February': 2,
           'March': 3,
@@ -14,23 +43,4 @@ months = {'January': 1,
           'November': 11,
           'December': 12}
 
-calendar = Calendar()
-
-def get_month_dates(month_number):
-    dates = []
-    month_dates = calendar.itermonthdates(2019,month_number)
-    for date in month_dates:
-        if date.month is month_number:
-            dates.append(date)
-    return dates
-
-
-def filter_expenses_by_month(expenses, dates):
-    filtered = []
-    for expense in expenses:
-        for date in dates:
-            if expense.date == date:
-                filtered.append(expense)
-    return filtered
-
-
+years = get_years(start=2010, end=2030)
