@@ -38,6 +38,27 @@
   </div>
   {% endif %}
 </form>
+<form class="form-filter form-submit" action="{{ url_for('filter_incomes')}}" method="post">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Show incomes in:</span>
+    </div>
+    <select class="custom-select" name="month" id="month">
+      {% for month, number in months.items() %}
+      <option value="{{ number }}">{{ month }}</option>
+      {% endfor %}
+    </select>
+    <select class="custom-select" name="year" id="year">
+      {% for year in years %}
+      <option value="{{ year }}">{{ year }}</option>
+      {% endfor %}
+    </select>
+    <div class="input-group-append">
+       <button class="btn btn-primary" name="submit" type="submit">Show</button>
+       <button class="btn btn-primary" type='submit' name="reset" value="reset">Reset</button></a>
+    </div>
+  </div>
+</form>
 <div class="table-container">
   <table class="table table-striped">
     <thead>

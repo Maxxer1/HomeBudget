@@ -8,7 +8,7 @@ from currency_rate_scheduler import get_currency_rate_date
 from accounts_helpers import convert_total_balance
 from account_types import account_types
 from currencies import currencies
-from calendar_helpers import get_month_dates, filter_expenses_by_month, months, years
+from calendar_helpers import get_dates,filter_expenses_by_month_year, filter_incomes_by_month_year, months, years
 
 
 @app.route('/')
@@ -90,14 +90,13 @@ def accounts():
 
 @app.route('/change_currency', methods=['POST'])
 def change_currency():
-    if request.method == 'POST':
-        if request.form.get('reset'):
-            return redirect(url_for('accounts'))
-        accounts = Account.query.filter_by(user=current_user)
-        total_balance = convert_total_balance(accounts, request.form.get('currency'))
-        return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
-                               total_balance=total_balance, currencies=currencies, 
-                               total_balance_currency=request.form.get('currency'), currency_rate_date=get_currency_rate_date())
+    if request.form.get('reset'):
+        return redirect(url_for('accounts'))
+    accounts = Account.query.filter_by(user=current_user)
+    total_balance = convert_total_balance(accounts, request.form.get('currency'))
+    return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
+                            total_balance=total_balance, currencies=currencies, 
+                            total_balance_currency=request.form.get('currency'), currency_rate_date=get_currency_rate_date())
 
 
 @app.route('/delete_account', methods=['POST'])
@@ -156,7 +155,8 @@ def incomes():
         db.session.add(income, account)
         db.session.commit()
         return redirect(url_for('incomes'))
-    return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts)
+    return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts, months=months,
+                            years=years)
 
 
 @app.route('/delete_income', methods=['POST'])
@@ -169,6 +169,20 @@ def delete_income():
     db.session.commit()
     return redirect(url_for('incomes'))
 
+
+@app.route('/filter_incomes', methods=['POST'])
+def filter_incomes():
+    categories = Category.query.filter_by(user=current_user, is_expense=False)
+    accounts = Account.query.filter_by(user=current_user)
+    incomes =  Income.query.filter_by(user=current_user).order_by(
+        Income.date.desc()).all()
+    if request.form.get('reset'):
+        return redirect(url_for('incomes'))
+    dates = get_dates(int(request.form.get('month')), int(request.form.get('year')))
+    incomes = filter_incomes_by_month_year(incomes, dates)
+    incomes = enumerate((income for income in incomes), start=1) 
+    return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts,
+                            months=months, years=years)
 
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
@@ -210,11 +224,10 @@ def filter_expenses():
     accounts = Account.query.filter_by(user=current_user)
     expenses = Expense.query.filter_by(user=current_user).order_by(
         Expense.date.desc()).all()
-    if request.method == 'POST':
-        if request.form.get('reset'):
-            return redirect(url_for('expenses'))
-        dates = get_month_dates(int(request.form.get('month')), int(request.form.get('year')))
-        expenses = filter_expenses_by_month(expenses, dates)
-        expenses = enumerate((expense for expense in expenses), start=1)
+    if request.form.get('reset'):
+        return redirect(url_for('expenses'))
+    dates = get_dates(int(request.form.get('month')), int(request.form.get('year')))
+    expenses = filter_expenses_by_month_year(expenses, dates)
+    expenses = enumerate((expense for expense in expenses), start=1)
     return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts,
                             months=months, years=years)
