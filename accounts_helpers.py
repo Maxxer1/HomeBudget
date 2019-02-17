@@ -11,4 +11,4 @@ def convert_total_balance(accounts, foreign_currency):
     for account in accounts:
         account.convert_balance(foreign_currency)
         account.currency = foreign_currency
-        return calculate_total_balance(accounts)
+    return calculate_total_balance(accounts)
