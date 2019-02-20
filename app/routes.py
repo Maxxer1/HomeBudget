@@ -1,14 +1,19 @@
 from app import app, db
 from flask import render_template, url_for, request, redirect, session
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, UserLogin, Category, Expense, Income, Account
+from app.models.user import User
+from app.models.user_login import UserLogin
+from app.models.account import Account
+from app.models.expense import Expense
+from app.models.income import Income
+from app.models.category import Category
 from datetime import timedelta
 from error_messages import ErrorMessage
 from currency_rate_scheduler import get_currency_rate_date
 from accounts_helpers import convert_total_balance
 from account_types import account_types
 from currencies import currencies
-from calendar_helpers import get_dates,filter_expenses_by_month_year, filter_incomes_by_month_year, months, years
+from calendar_helpers import get_dates, filter_expenses_by_month_year, filter_incomes_by_month_year, months, years
 
 
 @app.route('/')
@@ -76,7 +81,8 @@ def accounts():
                                           name=request.form.get('name')).first()
         if account is not None:
             return render_template('accounts.html', error_message=ErrorMessage.ACCOUNT_ALREADY_EXISTS.value,
-                                   account_types=account_types, accounts=enumerate(accounts, start=1),
+                                   account_types=account_types, accounts=enumerate(
+                                       accounts, start=1),
                                    currencies=currencies, currency_rate_date=get_currency_rate_date())
         account = Account(name=request.form.get('name'), balance=request.form.get('balance'),
                           description=request.form.get('description'), currency=request.form.get('currency'),
@@ -93,10 +99,11 @@ def change_currency():
     if request.form.get('reset'):
         return redirect(url_for('accounts'))
     accounts = Account.query.filter_by(user=current_user)
-    total_balance = convert_total_balance(accounts, request.form.get('currency'))
+    total_balance = convert_total_balance(
+        accounts, request.form.get('currency'))
     return render_template('accounts.html', account_types=account_types, accounts=enumerate(accounts, start=1),
-                            total_balance=total_balance, currencies=currencies, 
-                            total_balance_currency=request.form.get('currency'), currency_rate_date=get_currency_rate_date())
+                           total_balance=total_balance, currencies=currencies,
+                           total_balance_currency=request.form.get('currency'), currency_rate_date=get_currency_rate_date())
 
 
 @app.route('/delete_account', methods=['POST'])
@@ -156,15 +163,16 @@ def incomes():
         db.session.commit()
         return redirect(url_for('incomes'))
     return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts, months=months,
-                            years=years)
+                           years=years)
 
 
 @app.route('/delete_income', methods=['POST'])
 def delete_income():
-    account = Account.query.filter_by(user=current_user, name=request.form.get('account')).first()
+    account = Account.query.filter_by(
+        user=current_user, name=request.form.get('account')).first()
     income_to_delete = Income.query.filter_by(user=current_user,
                                               name=request.form.get('income')).first()
-    account.lower_balance(income_to_delete.ammout) 
+    account.lower_balance(income_to_delete.ammout)
     db.session.delete(income_to_delete)
     db.session.commit()
     return redirect(url_for('incomes'))
@@ -174,15 +182,16 @@ def delete_income():
 def filter_incomes():
     categories = Category.query.filter_by(user=current_user, is_expense=False)
     accounts = Account.query.filter_by(user=current_user)
-    incomes =  Income.query.filter_by(user=current_user).order_by(
+    incomes = Income.query.filter_by(user=current_user).order_by(
         Income.date.desc()).all()
     if request.form.get('reset'):
         return redirect(url_for('incomes'))
-    dates = get_dates(int(request.form.get('month')), int(request.form.get('year')))
+    dates = get_dates(int(request.form.get('year')), int(request.form.get('month')))
     incomes = filter_incomes_by_month_year(incomes, dates)
-    incomes = enumerate((income for income in incomes), start=1) 
+    incomes = enumerate((income for income in incomes), start=1)
     return render_template('incomes.html', categories=categories, incomes=incomes, accounts=accounts,
-                            months=months, years=years)
+                           months=months, years=years)
+
 
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
@@ -204,12 +213,13 @@ def expenses():
         db.session.commit()
         return redirect(url_for('expenses'))
     return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts,
-                            months=months, years=years)
+                           months=months, years=years)
 
 
 @app.route('/delete_expense', methods=['POST'])
 def delete_expense():
-    account = Account.query.filter_by(user=current_user, name=request.form.get('account')).first()
+    account = Account.query.filter_by(
+        user=current_user, name=request.form.get('account')).first()
     expense_to_delete = Expense.query.filter_by(user=current_user,
                                                 name=request.form.get('expense')).first()
     account.increment_balance(expense_to_delete.ammout)
@@ -226,8 +236,8 @@ def filter_expenses():
         Expense.date.desc()).all()
     if request.form.get('reset'):
         return redirect(url_for('expenses'))
-    dates = get_dates(int(request.form.get('month')), int(request.form.get('year')))
+    dates = get_dates(int(request.form.get('year')), int(request.form.get('month')))
     expenses = filter_expenses_by_month_year(expenses, dates)
     expenses = enumerate((expense for expense in expenses), start=1)
     return render_template('expenses.html', categories=categories, expenses=expenses, accounts=accounts,
-                            months=months, years=years)
+                           months=months, years=years)

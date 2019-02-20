@@ -4,7 +4,7 @@ from datetime import date
 calendar = Calendar()
 
 
-def get_dates(month, year):
+def get_dates(year, month):
     '''Returns dates in given month from 1st to last day
 
     Keyword arguments:
