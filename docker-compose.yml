@@ -1,17 +1,26 @@
 version: "3"
 services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "budget"
+      MYSQL_USER: "app"
+      MYSQL_PASSWORD: "app"
+    command: --default-authentication-plugin=mysql_native_password
   app:
-    build: .
+    image: homebudget_app
     links:
       - mysql
     ports:
       - "5000:5000"
-  mysql:
-    image: mysql:latest
-    ports:
-     - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "app"
-      MYSQL_USER: "app"
-      MYSQL_PASSWORD: "app"
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure

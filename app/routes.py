@@ -14,12 +14,13 @@ from accounts_helpers import convert_total_balance
 from account_types import account_types
 from currencies import currencies
 from calendar_helpers import get_dates, filter_expenses_by_month_year, filter_incomes_by_month_year, months, years
+import socket
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', hostname=socket.gethostname())
 
 
 @app.route('/login', methods=['GET', 'POST'])
