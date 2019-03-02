@@ -6,5 +6,5 @@ Web service for managing home budget written in python
 
 ### Using docker
 
-`cd HomeBudget`
+`cd HomeBudget`  
 `docker build -t homebudget_app && docker-compose up`
