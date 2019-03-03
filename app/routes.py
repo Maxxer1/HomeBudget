@@ -16,7 +16,6 @@ from currencies import currencies
 from calendar_helpers import get_dates, filter_expenses_by_month_year, filter_incomes_by_month_year, months, years
 import socket
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -157,7 +156,7 @@ def incomes():
         account = Account.query.filter_by(user=current_user,
                                           name=request.form.get('account')).first()
         income = Income(date=request.form.get(
-            'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
+            'datepicker'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category, user=current_user, account=account)
         account.increment_balance(income.ammout)
         db.session.add(income, account)
@@ -206,8 +205,8 @@ def expenses():
                                             name=request.form.get('category')).first()
         account = Account.query.filter_by(user=current_user,
                                           name=request.form.get('account')).first()
-        expense = Expense(date=request.form.get(
-            'date'), name=request.form.get('name'), ammout=request.form.get('ammout'),
+        expense = Expense(date= request.form.get(
+            'datepicker'), name=request.form.get('name'), ammout=request.form.get('ammout'),
             description=request.form.get('description'), category=category, user=current_user, account=account)
         account.lower_balance(expense.ammout)
         db.session.add(account, expense)

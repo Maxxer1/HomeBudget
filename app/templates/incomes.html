@@ -3,7 +3,7 @@
 <form class="form-submit" action="{{ url_for('incomes') }}" method="post">
   <h3>Manage Incomes</h3>
   <div class="input-group mb-3">
-    <input type="date" class="form-control" name="date" id="date" required title="Date of income required">
+    <input type="text" name="datepicker" id="datepicker" placeholder="Choose Date" required title="Date of income required">
 <div class="input-group-append">
     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
   </div>
@@ -78,7 +78,7 @@
       <tr>
         <form action="{{ url_for('delete_income') }}" method="post">
           <th scope="row">{{ count }}</th>
-          <td>{{ income.date}}</td>
+          <td>{{ income.date.strftime("%d.%m.%Y") }}</td>
           <td>{{ income.name }}</td>
           <td>{{ income.ammout}}</td>
           {% if income.description %}
